@@ -24,11 +24,12 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          TAG_NAME=$(echo "${{ github.ref }}" | sed 's/refs/tags//')
+          TAG_NAME=$(echo "${{ github.ref }}" | sed 's|refs/tags/||')
           docker buildx create --use
           # Build the multi-architecture image
-          docker buildx build --platform linux/amd64,linux/arm64 -t wabit/protect-timelapse:${TAG_NAME} -t wabit/protect-timelapse:latest --file Dockerfile .
+          docker buildx build --platform linux/amd64,linux/arm64 -t wabit/protect-timelapse:${{ github.sha }} -t wabit/protect-timelapse:${TAG_NAME} -t wabit/protect-timelapse:latest --file Dockerfile .
           echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
           # Push the tags for multi-architecture support
+          docker buildx imagetools create wabit/protect-timelapse:${{ github.sha }}
           docker buildx imagetools create wabit/protect-timelapse:${TAG_NAME}
           docker buildx imagetools create wabit/protect-timelapse:latest
