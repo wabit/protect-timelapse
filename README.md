@@ -40,10 +40,10 @@ version: '3'
 
 services:
   protect-timelapse:
-    image: protect-timelapse:v1.0.0
+    image: wabit/protect-timelapse:latest
     container_name: protect-timelapse
     volumes:
-      - ./config:/app/config
+      - /mnt/protect-snapshots:/app/config
 ```
 
 </details>
@@ -54,7 +54,7 @@ services:
 {
   "debug": false,
   "interval": 1,
-  "saveLocation": "./config/snapshots/",
+  "snapshotLocation": "./config/snapshots/",
   "timelapseLocation": "./config/timelapse/",
   "cameras": [
     { "name": "Patio", "ip": "192.168.1.10"},
@@ -65,6 +65,7 @@ services:
 
 * **`debug`** *(Boolean)* - enable debug logging.
 * **`interval`** *(Number)* - number of minutes between snapshots. 1 is the lowest value, 0.25 is the lowest value that is recommended.
-* **`saveLocation`** *(String)* - location to save snapshots, this shouldnt need to be changed.
+* **`snapshotLocation`** *(String)* - location to save snapshots, this shouldnt need to be changed.
+* **`snapshotRetention`** *(Number)* - number of days to keep snapshots for.
 * **`timelapseLocation`** *(String)* - location to save timelapse videos, this shouldnt need to be changed.
 * **`cameras`** *(Array)* - All the cameras to take snapshots from. **`name`** *(String)* used for the filename of the timelapse video. **`ip`** *(String)* the ip address of the camera.

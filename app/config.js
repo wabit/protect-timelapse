@@ -3,8 +3,10 @@ const { fs } = require('./utils')
 let config = {}
 const baseConfig = {
   "interval": 1,
-  "saveLocation": "./config/snapshots/",
+  "snapshotLocation": "./config/snapshots/",
+  "snapshotRetention": 2,
   "timelapseLocation": "./config/timelapse/",
+  "timelapseRetention": 7,
   "debug": false,
   "cameras": [
     {

@@ -7,6 +7,7 @@ const { startup } = require('./app/init')
 const configuration = require('./app/config')
 const { minutesToMilliseconds, getDirsForProcessing } = require('./app/helpers')
 const snapshots = require('./app/snapshots')
+const { cleanUpSnapshots, cleanupTimelapses } = require('./app/cleanup')
 
 let initialised = false
 let date = moment().format('YYYY-MM-DD')
@@ -20,7 +21,7 @@ async function init() {
   try {
     await startup()
     config = await configuration.get()
-    currentFolder = config.saveLocation + date
+    currentFolder = config.snapshotLocation + date
     interval = config.interval
     initialised = true
   } catch (error) {
@@ -34,7 +35,7 @@ async function init() {
 let processing = 0
 
 async function createVideo() {
-  getDirsForProcessing(config.saveLocation, date, config.cameras).forEach(directory => {
+  getDirsForProcessing(config.snapshotLocation, date, config.cameras).forEach(directory => {
     try {
       processing++
       console.log('Creating video for: ' + directory)
@@ -72,17 +73,19 @@ async function createVideo() {
 async function main() {
   await init()
   config = await configuration.get()
-  let currentFolder = config.saveLocation + date
+  let currentFolder = config.snapshotLocation + date
   const currentDate = moment().format('YYYY-MM-DD')
   const time = moment().format('HHmmss')
   if (currentDate != date) {
     date = currentDate;
-    currentFolder = config.saveLocation + date
+    currentFolder = config.snapshotLocation + date
   }
   if (processing == 0) {
     await createVideo()
   }
   await snapshots.snapshotService(config, currentFolder, time)
+  await cleanUpSnapshots(config.snapshotLocation, config.snapshotRetention)
+  await cleanupTimelapses(config.timelapseLocation, config.timelapseRetention)
 }
 
 init()

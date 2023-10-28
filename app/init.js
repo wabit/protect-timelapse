@@ -8,10 +8,10 @@ async function checkFolders() {
   } else {
     console.log('Folder exists: ' + config.timelapseLocation)
   }
-  if (!checkFolder(config.saveLocation)) {
-    createFolder(config.saveLocation)
+  if (!checkFolder(config.snapshotLocation)) {
+    createFolder(config.snapshotLocation)
   } else {
-    console.log('Folder exists: ' + config.saveLocation)
+    console.log('Folder exists: ' + config.snapshotLocation)
   }
   return true
 }
@@ -21,7 +21,7 @@ async function currentSettings() {
   console.log('---------------------------------')
   console.log('Starting snapshot service...')
   console.log('Interval: ' + config.interval + ' minutes')
-  console.log('Snapshot Location: ' + config.saveLocation)
+  console.log('Snapshot Location: ' + config.snapshotLocation)
   console.log('Timelapse Location: ' + config.timelapseLocation)
   console.log('Debug: ' + config.debug)
   console.log('Cameras: ' + config.cameras.length)
